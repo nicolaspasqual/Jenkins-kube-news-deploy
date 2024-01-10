@@ -6,7 +6,7 @@ pipeline {
         stage ('Build Docker Image') {
             steps {
                 script {
-                    dockerapp = docker.build("brunohcl/kube-news:${env.BUILD_ID}", '-f ./src/Dockerfile ./src')
+                    dockerapp = docker.build("nicolaspasqual/kube-news:${env.BUILD_ID}", '-f ./src/Dockerfile ./src')
                 }
             }
         }
@@ -22,17 +22,17 @@ pipeline {
             }
         }
 
-        stage ('Deploy Kubernertes'){
-            environment {
-                tag_version = "${env.BUILD_ID}"
-            }
-            steps {
-                withKubeConfig ([credentialsId: 'kubeconfig']){
-                    sh 'sed -i "s/{{TAG}}/$tag_version/g" ./k8s/deployment.yaml'
-                    sh 'kubectl apply -f ./k8s/deployment.yaml'
-                }
-            }
-        }
+        // stage ('Deploy Kubernertes'){
+        //     environment {
+        //         tag_version = "${env.BUILD_ID}"
+        //     }
+        //     steps {
+        //         withKubeConfig ([credentialsId: 'kubeconfig']){
+        //             sh 'sed -i "s/{{TAG}}/$tag_version/g" ./k8s/deployment.yaml'
+        //             sh 'kubectl apply -f ./k8s/deployment.yaml'
+        //         }
+        //     }
+        // }
         
     }
 
